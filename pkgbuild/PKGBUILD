@@ -1,11 +1,12 @@
 # Maintainer: Marcelo K. <elppansmk@...>
+# shellcheck disable=all
 
 pkgname=gnome-action-reimage
 pkgver=$(date +%y.%m.%d)
 pkgrel=$(date +%H%M)
 arch=('any')
 license=('GPL')
-depends=('libjxl' 'imagemagick' 'jhead' 'webp')
+depends=('libjxl' 'imagemagick' 'jhead')
 depends+=('gdm-settings')
 url="https://github.com/elppans/gnome-action-reimage"
 pkgdesc="Easily manipulate images and their metadata.
