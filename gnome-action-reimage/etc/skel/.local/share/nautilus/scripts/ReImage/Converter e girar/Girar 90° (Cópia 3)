@@ -1,4 +1,0 @@
-#!/bin/bash
-
-reimage-zenity rotate 90 "$@"
-
