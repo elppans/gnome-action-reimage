@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Verifica se somente um arquivo foi selecionado
+if [ "$#" -ne 1 ]; then
+    zenity --error --title="Erro" --text="Selecione apenas uma imagem!"
+    exit 1
+fi
+
+lock_img="$(readlink -m "$1")"
+
+# Verifica se o arquivo existe
+if [ ! -f "$lock_img" ]; then
+    zenity --error --title="Erro" --text="Arquivo não encontrado!"
+    exit 1
+fi
+
+# Verifica se o gdm-settings está instalado
+if ! command -v gdm-settings &>/dev/null; then
+    zenity --error --title="Erro" --text="O aplicativo gdm-settings não está instalado!\nInstale-o para continuar."
+    exit 1
+fi
+
+# Verifica se a extensão é suportada
+ext=$(echo "$lock_img" | awk -F. '{print tolower($NF)}')
+case "$ext" in
+    jpg|jpeg|png|webp)
+        # Define imagem de fundo da tela de bloqueio
+        dbus-launch gsettings set io.github.realmazharhussain.GdmSettings.appearance background-image "$lock_img"
+        dbus-launch gsettings set io.github.realmazharhussain.GdmSettings.appearance background-type 'image'
+
+        # Informa ao usuário que deve abrir o gdm-settings
+        zenity --info --title="Quase pronto!" --text="A imagem foi definida.\nAgora o aplicativo gdm-settings será aberto.\nClique em 'Aplicar' para finalizar a configuração."
+        
+        # Abre o gdm-settings
+        gdm-settings &
+
+        ;;
+    *)
+        zenity --error --title="Erro" --text="Formato não suportado! Use JPG, PNG ou WEBP."
+        ;;
+esac
+

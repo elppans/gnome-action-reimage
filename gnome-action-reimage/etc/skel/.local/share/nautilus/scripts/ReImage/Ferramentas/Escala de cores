@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Opções de espaço de cores
+color_space=$(zenity --list --title="Escolher Espaço de Cores" \
+    --text="Selecione o espaço de cores para conversão:" \
+    --column="Espaço de Cores" \
+    "Gray (Escala de Cinza)" \
+    "RGB" \
+    "CMYK" \
+    "LAB" \
+    "YCbCr" \
+    --height=250)
+
+# Verifica se o usuário cancelou
+if [ -z "$color_space" ]; then
+    exit 1
+fi
+
+# Mapeia a opção selecionada para o formato aceito pelo `convert-elcolorspace`
+case "$color_space" in
+    "Gray (Escala de Cinza)") convert_space="gray" ;;
+    "RGB") convert_space="rgb" ;;
+    "CMYK") convert_space="cmyk" ;;
+    "LAB") convert_space="lab" ;;
+    "YCbCr") convert_space="ycbcr" ;;
+    *) zenity --error --text="Erro: Espaço de cores inválido."; exit 1 ;;
+esac
+
+# Diretório de saída padrão
+output_dir="$HOME/Imagens/Convertidas"
+
+# Criar diretório de saída se não existir
+mkdir -p "$output_dir"
+
+# Arquivo de log
+log_file="/tmp/converter_escala_de_cores.log"
+echo "Espaço de cores escolhido: $convert_space" > "$log_file"
+echo "Arquivos: $@" >> "$log_file"
+echo "Diretório de saída: $output_dir" >> "$log_file"
+
+# Chama o script `convert-elcolorspace` para processar as imagens
+/usr/local/bin/convert-elcolorspace "$convert_space" -o "$output_dir" "$@" &>> "$log_file"
+
+# Verifica se houve sucesso
+if [ $? -eq 0 ]; then
+    zenity --info --text="Conversão concluída! Arquivos salvos em: $output_dir"
+else
+    zenity --error --text="Erro ao converter as imagens. Verifique o log em $log_file."
+fi

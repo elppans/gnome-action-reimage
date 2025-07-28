@@ -1,0 +1,4 @@
+#!/bin/bash
+
+for i in "$@"; do cat "$i" | base64 -w0 > "$i".base64; done
+

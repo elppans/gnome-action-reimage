@@ -1,0 +1,40 @@
+# Maintainer: Marcelo K. <elppansmk@...>
+
+pkgname=gnome-action-reimage
+pkgver=$(date +%y.%m.%d)
+pkgrel=$(date +%H%M)
+arch=('any')
+license=('GPL')
+depends=('libjxl' 'imagemagick' 'jhead' 'webp')
+depends+=('gdm-settings')
+url="https://github.com/elppans/gnome-action-reimage"
+pkgdesc="Easily manipulate images and their metadata.
+ gnome-action-reimage is a package that adds practical context menu actions
+ to GNOME Files (Nautilus), accessible with a right-click on image files.
+ These actions include resizing, format conversion, metadata editing, and more—
+ all powered by Zenity for simple, intuitive visual interactions."
+source=("git+https://github.com/elppans/gnome-action-reimage.git")
+md5sums=(SKIP)
+
+package() {
+    # Verify default folder
+    if [ -d "${srcdir}/${pkgname}/${pkgname}" ]; then
+        InternalDir="${srcdir}/${pkgname}/${pkgname}"
+    else
+        InternalDir="${srcdir}/${pkgname}"
+    fi
+
+
+    # Copy files
+    if [ -d "${InternalDir}/usr" ]; then
+        cp -r "${InternalDir}/usr" "${pkgdir}/"
+    fi
+
+    if [ -d "${InternalDir}/etc" ]; then
+        cp -r "${InternalDir}/etc" "${pkgdir}/"
+    fi
+
+    if [ -d "${InternalDir}/opt" ]; then
+        cp -r "${InternalDir}/opt" "${pkgdir}/"
+    fi
+}

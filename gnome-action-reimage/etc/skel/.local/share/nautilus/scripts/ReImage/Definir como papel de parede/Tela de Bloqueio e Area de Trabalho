@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Verifica se apenas um arquivo foi selecionado
+if [ "$#" -ne 1 ]; then
+    zenity --error --title="Erro" --text="Selecione apenas uma imagem!"
+    exit 1
+fi
+
+wall_img="$(readlink -m "$1")"
+
+# Verifica se o arquivo existe
+if [ ! -f "$wall_img" ]; then
+    zenity --error --title="Erro" --text="Arquivo não encontrado!"
+    exit 1
+fi
+
+# Verifica se o gdm-settings está instalado
+if ! command -v gdm-settings &>/dev/null; then
+    zenity --error --title="Erro" --text="O aplicativo gdm-settings não está instalado!\nInstale-o para continuar."
+    exit 1
+fi
+
+# Verifica extensão suportada
+ext=$(echo "$wall_img" | awk -F. '{print tolower($NF)}')
+case "$ext" in
+    jpg|jpeg|png|webp)
+        # Aplica como papel de parede
+        gsettings set org.gnome.desktop.background picture-uri "file://$wall_img"
+        gsettings set org.gnome.desktop.background picture-uri-dark "file://$wall_img"
+
+        # Aplica como tela de bloqueio
+        dbus-launch gsettings set io.github.realmazharhussain.GdmSettings.appearance background-image "$lock_img"
+        dbus-launch gsettings set io.github.realmazharhussain.GdmSettings.appearance background-type 'image'
+        # Informa ao usuário que deve abrir o gdm-settings
+        zenity --info --title="Quase pronto!" --text="Wallpaper foi atualizado com sucesso.\n\nAgora o aplicativo gdm-settings será aberto.\nClique em 'Aplicar' para finalizar a configuração da imagem na tela de bloqueio."
+        
+        # Abre o gdm-settings
+        gdm-settings &
+        
+        ;;
+    *)
+        zenity --error --title="Erro" --text="Formato não suportado! Use JPG, PNG ou WEBP."
+        ;;
+esac
+

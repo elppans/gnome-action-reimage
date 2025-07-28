@@ -1,0 +1,4 @@
+#!/bin/bash
+
+reimage-kdialog sepia 80% "$@"
+
