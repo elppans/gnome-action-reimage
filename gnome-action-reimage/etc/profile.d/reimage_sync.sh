@@ -15,7 +15,7 @@ DESTINO="$HOME/.local/share/nautilus/scripts/ReImage"
 mkdir -p "$DESTINO"
 
 # Renomeia diretórios e arquivos antes de sincronizar
-IDIOMAREI="reimage_$(echo "$LANG" | cut -d'.' -f1 | cut -d'_' -f1)"
+IDIOMAREI="reimage_lang_$(echo "$LANG" | cut -d'.' -f1 | cut -d'_' -f1)"
 export IDIOMAREI
 
 
@@ -25,6 +25,7 @@ if [ -d "$ORIGEM" ]; then
         if [ ! -f "$ORIGEM/$IDIOMAREI" ]; then
             sudo transname "$ORIGEM"/*
             sudo transname "$ORIGEM"/*/*
+            sudo rm "$ORIGEM"/reimage_lang_*
             sudo touch "$ORIGEM/$IDIOMAREI"
         fi
     fi
