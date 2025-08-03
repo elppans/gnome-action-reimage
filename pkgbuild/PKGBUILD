@@ -38,7 +38,7 @@ package() {
 }
 cat > "${pkgname}.install" <<EOF
 post_install() {
-/usr/bin/${pkgname}-trans
+/usr/bin/reimage-trans
 case "$LANG" in
     pt_*)
         echo "O pacote \"${pkgname}\" foi instalado com sucesso."
