@@ -25,7 +25,7 @@ if [ -d "$ORIGEM" ]; then
         if [ ! -f "$ORIGEM/$IDIOMAREI" ]; then
             sudo transname "$ORIGEM"/*
             sudo transname "$ORIGEM"/*/*
-            touch "$ORIGEM/$IDIOMAREI"
+            sudo touch "$ORIGEM/$IDIOMAREI"
         fi
     fi
         # Sincroniza arquivos e diretórios "REImage" ausentes em $HOME com /etc/skel
