@@ -18,11 +18,11 @@ export IDIOMAREI
 if [ -d "$ORIGEM" ]; then
     if command -v transname &> /dev/null; then
         if [ ! -f "$ORIGEM/$IDIOMAREI" ]; then
-            rm "$LOG"
+            rm "$LOG" &>>/dev/null
             touch "$LOG"
             transname "$ORIGEM"/* | tee "$LOG"  
             transname "$ORIGEM"/*/* | tee -a "$LOG"
-            rm "$ORIGEM"/reimage_lang_*
+            rm "$ORIGEM"/reimage_lang_* &>>/dev/null
             touch "$ORIGEM/$IDIOMAREI"
             chmod 1766 "$LOG"
         fi
