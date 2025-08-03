@@ -23,13 +23,14 @@ export IDIOMAREI
 if [ -d "$ORIGEM" ]; then
     if command -v transname &> /dev/null; then
         if [ ! -f "$ORIGEM/$IDIOMAREI" ]; then
-            transname "$ORIGEM"/*
-            transname "$ORIGEM"/*/*
+            sudo transname "$ORIGEM"/*
+            sudo transname "$ORIGEM"/*/*
             touch "$ORIGEM/$IDIOMAREI"
         fi
     fi
         # Sincroniza arquivos e diretórios "REImage" ausentes em $HOME com /etc/skel
         rsync -auv --ignore-existing "$ORIGEM/" "$DESTINO" &>> "$LOG"
+        chmod 1766 "$LOG"
 fi
 
 
