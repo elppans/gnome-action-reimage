@@ -10,7 +10,7 @@ depends=('libjxl' 'imagemagick' 'jhead')
 depends+=('gdm-settings')
 url="https://github.com/elppans/gnome-action-reimage"
 pkgdesc="Easily manipulate images and their metadata in action scripts."
-source=("git+$url.git#branch=main")
+source=("git+$url.git#branch=testing")
 md5sums=(SKIP)
 install=${pkgname}.install
 
