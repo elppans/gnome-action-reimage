@@ -38,20 +38,18 @@ package() {
 }
 cat > "${pkgname}.install" <<EOF
 post_install() {
-case "$LANG" in
-    pt_*)
-        echo "Configurando  \"${pkgname}\"..."
-        /usr/bin/reimage-trans
-        echo "O pacote \"${pkgname}\" foi instalado com sucesso."
-        echo "Reinicie a sessão para que as configurações dos Action Scripts sejam aplicadas."
-    ;;
-    *)
-        echo "Configuring \"${pkgname}\"..."
-        /usr/bin/reimage-trans
-        echo "The package \"${pkgname}\" was successfully installed."
-        echo "Restart your session to apply the Action Scripts configuration."
-    ;;
-esac
+if [[ "$LANG" == pt_* ]]; then
+    echo "Configurando  \"${pkgname}\"..."
+    /usr/bin/reimage-trans
+    echo "O pacote \"${pkgname}\" foi instalado com sucesso."
+    echo "Reinicie a sessão para que as configurações dos Action Scripts sejam aplicadas."
+else
+    echo "Configuring \"${pkgname}\"..."
+    /usr/bin/reimage-trans
+    echo "The package \"${pkgname}\" was successfully installed."
+    echo "Restart your session to apply the Action Scripts configuration."
+
+fi
 }
 post_upgrade() {
     post_install
