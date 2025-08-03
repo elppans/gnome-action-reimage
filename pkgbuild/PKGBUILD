@@ -9,11 +9,7 @@ license=('GPL')
 depends=('libjxl' 'imagemagick' 'jhead')
 depends+=('gdm-settings')
 url="https://github.com/elppans/gnome-action-reimage"
-pkgdesc="Easily manipulate images and their metadata.
- gnome-action-reimage is a package that adds practical context menu actions
- to GNOME Files (Nautilus), accessible with a right-click on image files.
- These actions include resizing, format conversion, metadata editing, and more—
- all powered by Zenity for simple, intuitive visual interactions."
+pkgdesc="Easily manipulate images and their metadata in action scripts."
 source=("git+https://github.com/elppans/gnome-action-reimage.git")
 md5sums=(SKIP)
 
