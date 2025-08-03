@@ -1,8 +1,47 @@
 #!/bin/bash
+# shellcheck disable=SC2034,SC2086
+
+lang="$(echo "$LANG" | cut -d"." -f1)"
+export lang
+
+load_language_en_US () {
+msg_common_error_title="Error"
+msg_common_one_image_text="Select just one image!"
+msg_common_not_found_text="File not found!"
+msg_common_not_installed_text="The gdm-settings application is not installed!\nPlease install it to continue."
+msg_common_unsupported_format_text="Unsupported format! Use JPG, PNG, or WEBP."
+msg_common_almost_ready_title="Almost ready!"
+msg_common_image_has_been_set_text="The image has been set.\nNow the gdm-settings application will open.\nClick 'Apply' to finish the configuration."
+msg_common_success_title="Success"
+msg_common_success_text="Wallpaper updated successfully!"
+}
+load_language_pt_BR () {
+msg_common_error_title="Erro"
+msg_common_one_image_text="Selecione apenas uma imagem!"
+msg_common_not_found_text="Arquivo não encontrado!"
+msg_common_not_installed_text="O aplicativo gdm-settings não está instalado!\nInstale-o para continuar."
+msg_common_unsupported_format_text="Formato não suportado! Use JPG, PNG ou WEBP."
+msg_common_almost_ready_title="Quase pronto!"
+msg_common_image_has_been_set_text="A imagem foi definida.\nAgora o aplicativo gdm-settings será aberto.\nClique em 'Aplicar' para finalizar a configuração."
+msg_common_success_title="Sucesso"
+msg_common_success_text="Wallpaper atualizado com sucesso!"
+}
+load_language_pt_PT () {
+    load_language_pt_BR
+}
+load_language () {
+	## Load localized strings AFTER english strings
+	## - if localized strings not found use english for default
+	## - if localized strings are incomplete use english only fot missing strings :-)
+	load_language_en_US && [ "${lang}" != "en_US" ] && load_language_${lang}
+}
+lang=${LANGUAGE%%:*}
+type load_language_${lang} &> /dev/null || lang='en_US'
+load_language
 
 # Verifica se somente um arquivo foi selecionado
 if [ "$#" -ne 1 ]; then
-    zenity --error --title="Erro" --text="Selecione apenas uma imagem!"
+    zenity --error --title="${msg_common_error_title}" --text="${msg_common_one_image_text}"
     exit 1
 fi
 
@@ -10,13 +49,13 @@ lock_img="$(readlink -m "$1")"
 
 # Verifica se o arquivo existe
 if [ ! -f "$lock_img" ]; then
-    zenity --error --title="Erro" --text="Arquivo não encontrado!"
+    zenity --error --title="${msg_common_error_title}" --text="${msg_common_not_found_text}"
     exit 1
 fi
 
 # Verifica se o gdm-settings está instalado
 if ! command -v gdm-settings &>/dev/null; then
-    zenity --error --title="Erro" --text="O aplicativo gdm-settings não está instalado!\nInstale-o para continuar."
+    zenity --error --title="${msg_common_error_title}" --text="${msg_common_not_installed_text}"
     exit 1
 fi
 
@@ -29,14 +68,14 @@ case "$ext" in
         dbus-launch gsettings set io.github.realmazharhussain.GdmSettings.appearance background-type 'image'
 
         # Informa ao usuário que deve abrir o gdm-settings
-        zenity --info --title="Quase pronto!" --text="A imagem foi definida.\nAgora o aplicativo gdm-settings será aberto.\nClique em 'Aplicar' para finalizar a configuração."
+        zenity --info --title="${msg_common_almost_ready_title}" --text="${msg_common_image_has_been_set_text}"
         
         # Abre o gdm-settings
         gdm-settings &
 
         ;;
     *)
-        zenity --error --title="Erro" --text="Formato não suportado! Use JPG, PNG ou WEBP."
+        zenity --error --title="${msg_common_error_title}" --text="${msg_common_unsupported_format_text}"
         ;;
 esac
 
