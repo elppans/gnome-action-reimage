@@ -41,13 +41,11 @@ post_install() {
 if [[ "$LANG" == pt_* ]]; then
     echo "Configurando  \"${pkgname}\"..."
     chmod +x /etc/profile.d/reimage_sync.sh
-    # /usr/bin/reimage-trans
     echo "O pacote \"${pkgname}\" foi instalado com sucesso."
     echo "Reinicie a sessão para que as configurações dos Action Scripts sejam aplicadas."
 else
     echo "Configuring \"${pkgname}\"..."
     chmod +x /etc/profile.d/reimage_sync.sh
-    # /usr/bin/reimage-trans
     echo "The package \"${pkgname}\" was successfully installed."
     echo "Restart your session to apply the Action Scripts configuration."
 
