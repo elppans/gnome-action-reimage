@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Comando para sincronização do Action Script ReImage
+comando="$(basename "$0")"
+
+# LOG
+LOG="/tmp/$comando.log"
+
+# Caminho de origem
+ORIGEM="/usr/share/ReImage"
+
+# Renomeia diretórios e arquivos antes de sincronizar
+IDIOMAREI="reimage_lang_$(echo "$LANG" | cut -d'.' -f1 | cut -d'_' -f1)"
+export IDIOMAREI
+
+
+
+if [ -d "$ORIGEM" ]; then
+    if command -v transname &> /dev/null; then
+        if [ ! -f "$ORIGEM/$IDIOMAREI" ]; then
+            rm "$LOG"
+            touch "$LOG"
+            transname "$ORIGEM"/* | tee "$LOG"  
+            transname "$ORIGEM"/*/* | tee -a "$LOG"
+            rm "$ORIGEM"/reimage_lang_*
+            touch "$ORIGEM/$IDIOMAREI"
+            chmod 1766 "$LOG"
+        fi
+    fi
+fi
+
+
+
+
+
+
+

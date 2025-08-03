@@ -10,8 +10,9 @@ depends=('libjxl' 'imagemagick' 'jhead')
 depends+=('gdm-settings')
 url="https://github.com/elppans/gnome-action-reimage"
 pkgdesc="Easily manipulate images and their metadata in action scripts."
-source=("git+https://github.com/elppans/gnome-action-reimage.git")
+source=("git+$url.git#branch=main")
 md5sums=(SKIP)
+install=${pkgname}.install
 
 package() {
     # Verify default folder
@@ -35,3 +36,31 @@ package() {
         cp -r "${InternalDir}/opt" "${pkgdir}/"
     fi
 }
+cat > "${pkgname}.install" <<EOF
+post_install() {
+/usr/bin/${pkgname}-trans
+case "$LANG" in
+    pt_*)
+        echo "O pacote \"${pkgname}\" foi instalado com sucesso."
+        echo "Reinicie a sessão para que as configurações dos Action Scripts sejam aplicadas."
+    ;;
+    *)
+        echo "The package \"${pkgname}\" was successfully installed."
+        echo "Restart your session to apply the Action Scripts configuration."
+    ;;
+esac
+}
+post_upgrade() {
+    post_install
+}
+post_remove() {
+case "$LANG" in
+    pt_*)
+        echo "O \"${pkgname}\" foi removido."
+    ;;
+    *)
+        echo "\"${pkgname}\" has been removed."
+    ;;
+esac
+}
+EOF
